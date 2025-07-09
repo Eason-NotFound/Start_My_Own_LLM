@@ -35,7 +35,7 @@ We use Openai and Panel, here we need openai to be the new version since we are 
 from openai import OpenAI
 import panel as pn
 client = OpenAI(
-    api_key="sk-G2de37624fc053aca5294b5360ed24c64f8f16db4e1nYepO",
+    api_key="",
     base_url="https://api.gptsapi.net/v1"
 )
 #model = "gpt-3.5-turbo"
