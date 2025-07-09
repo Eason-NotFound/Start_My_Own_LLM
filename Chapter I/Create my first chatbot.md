@@ -1,4 +1,4 @@
-# Create my first chatbot
+# A. Create my first chatbot
 
 | Roles  | Meaning  | 
 |:----------|:----------|
@@ -16,13 +16,15 @@ Second, How to store the memory --> Append conversation into context (The model 
 
 ## Menu
 1. Installation
-2. Connect Api
+2. Connect API
 3. Prepare Functions
-4. Create System
+4. Create Prompt
 5. Create Panel
+6. For user who can't access to OpenAI
 
 ## 1. Prepare installations
-We use Openai and Panel, here we need openai to be the new version since we are using other server to touch openai (For users who can't access to openai directly)
+We use Openai and Panel, Panel is used to display text and interact with user
+** Remember to upgrade openai **
 
 ```
 !pip install -q openai==1.1.1
@@ -31,25 +33,34 @@ We use Openai and Panel, here we need openai to be the new version since we are 
 !pip install --upgrade openai panel
 ```
 ## 2. Connect API by creating a client (since we user another server rather than openai)
+*** 
 ```
-from openai import OpenAI
+import openai
 import panel as pn
-client = OpenAI(
-    api_key="",
-    base_url="https://api.gptsapi.net/v1"
-)
+openai.api_key="Your_api_key"
 #model = "gpt-3.5-turbo"
 model = "gpt-4o-mini"
 ```
 
 ## 3. Prepare functions
 ### This function is for receiving the message and return output
+It simply call openai to have the conversation with you
+To call openai, we need these parameters
+
+| Parameters  | Usage  |
+|:----------|:----------|
+| Model   | The model we want    |
+| Message    | Message part of the conversation   |
+| Temperature  | Number between 0-2, The smaller the value, the less original the model’s response will be. That determines the imagination of the model    |
+
+The lower the value of temperature, the more similar the result will be for the same inputs
+
 ```
 #This function will receive the different messages in the conversation,
 #and call OpenAI passing the full conversartion.
-    
+
 def continue_conversation(messages, temperature=0):
-    response = client.chat.completions.create(  # 使用 client 而不是 openai
+    response = openai.chat.completions.create(
         model=model,
         messages=messages,
         temperature=temperature,
@@ -58,6 +69,7 @@ def continue_conversation(messages, temperature=0):
 ```
 
 ### This function is for storing the past information
+This function collects input and incorporating it into the context or conversation. It is simply like adding text into list.
 ```
 def add_prompts_conversation(_):
     #Get the value introduced by the user
@@ -81,7 +93,10 @@ def add_prompts_conversation(_):
 
     return pn.Column(*panels)
 ```
-## 4. Create the system
+## 4. Create the prompt
+It could be seperated into two parts: 
+* Indicating how the model should behave(Act like a bot in a icecream shop trying to find out what customers want to buy).
+* Give robots the menu.
 ```
 #Creating the system part of the prompt
 #Read and understand it.
@@ -122,6 +137,7 @@ Each topping cost 0.5$
 """} ]
 ```
 ## 5. Create the panel
+Finally, we use panel to get the user input prompt and put the model to work
 ```
 pn.extension()
 
@@ -139,11 +155,32 @@ dashboard = pn.Column(
 )
 
 #To talk with the chat push the botton: 'talk' after your sentence.
-dashboard
+dashboard # Call the function
 ```
+## 6. Expecailly, for user who can't access to openai
+You could look for other server and simply change part 2 and 3
 
-
-
+### For part 2, it becames client
+```
+from openai import OpenAI
+import panel as pn
+client = OpenAI(
+    api_key="YOUR_API_KEY",
+    base_url="https://api.gptsapi.net/v1"
+)
+#model = "gpt-3.5-turbo"
+model = "gpt-4o-mini"
+```
+### For part 3, only change openai to client as well
+```
+def continue_conversation(messages, temperature=0):
+    response = client.chat.completions.create(  # 使用 client 而不是 openai
+        model=model,
+        messages=messages,
+        temperature=temperature,
+    )
+    return response.choices[0].message.content
+```
 
 
 
