@@ -1,6 +1,6 @@
-# Start_My_Own_LLM
-A box for real-time sharing of LLM learning progress.
-I will share the experience of learning LLM without any based knowledge.
+# AlphAI Branch
+This is an instruction related to AlphAI Robots from Learning Robots.
+If you want to learn this instruction, you need to have the access of AlphAI software and the robots first.
 
 Here are the learning sources:
-1. https://github.com/peremartra/Large-Language-Model-Notebooks-Course/blob/main/1-Introduction%20to%20LLMs%20with%20OpenAI/readme.md
+1. https://www.learningrobots.ai/en/ressources/activite-alphai-q-learning-ou-programmation-avec-pytorch
